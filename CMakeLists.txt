@@ -6,7 +6,7 @@ project(dzo VERSION 0.1.0)
 
 find_package( OpenCV REQUIRED )
 
-add_executable(dzo main.cpp)
+add_executable(dzo main.cpp my_threshhold.cpp)
 
 target_link_libraries( dzo ${OpenCV_LIBS} )
 
