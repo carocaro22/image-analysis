@@ -1,6 +1,5 @@
 #include <stdio.h>
-
-#include <opencv2/opencv.hpp>
+#include <opencv/4.x/include/opencv2/opencv.hpp>
 
 int main()
 {
