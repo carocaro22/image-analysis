@@ -1,8 +1,11 @@
 #include <stdio.h>
-#include <opencv/4.x/include/opencv2/opencv.hpp>
+#include <iostream>
+#include <opencv2/opencv.hpp>
+using namespace std;
 
 int main(int argc, char** argv)
 {
+    cout << "Hello World!" << endl;
     
     return 0;
 }
