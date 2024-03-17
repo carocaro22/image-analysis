@@ -80,16 +80,16 @@ int main(int argc, char** argv)
     int listSize = objectList.size();
     std::cout << listSize << std::endl; 
     
-    // for (int i = 0; i < listSize; i++) {
-    //     std::vector<std::pair<int,int>> obj = objectList.front();
-    //     objectList.pop_front();
-    //     int obj_area = area(obj); 
-    //     int obj_circumference = circumference(img, obj);
-    //     std::cout << "index: " << i << std::endl;
-    //     std::cout << "area: " << obj_area << std::endl;
-    //     std::cout << "circumference: " << obj_circumference << std::endl;
-    //     std::cout << "" << std::endl;
-    // }
+    for (int i = 0; i < listSize; i++) {
+        std::vector<std::pair<int,int>> obj = objectList.front();
+        objectList.pop_front();
+        int obj_area = area(obj); 
+        int obj_circumference = circumference(img, obj);
+        std::cout << "index: " << i << std::endl;
+        std::cout << "area: " << obj_area << std::endl;
+        std::cout << "circumference: " << obj_circumference << std::endl;
+        std::cout << "" << std::endl;
+    }
 
     cv::imshow("Index", img);
     cv::waitKey(0);

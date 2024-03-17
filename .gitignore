@@ -2,6 +2,7 @@ opencv.zip
 opencv-4.x/*
 build/*
 .vscode/tasks.json
+.vscode/settings.json
 CMakeCache.txt
 CMakeFiles/
 Makefile
