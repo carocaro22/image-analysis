@@ -43,13 +43,14 @@ std::vector<std::pair<int, int>> indexObject(cv::Mat &img, std::pair<int, int> s
 
 std::list<std::vector<std::pair<int, int>>> indexAndColor(cv::Mat &img, cv::Vec3b bg) {
     std::list<std::vector<std::pair<int,int>>> objectList;
+    cv::Vec3b white = cv::Vec3b(255, 255, 255);
 
     for (int i = 0; i < img.rows; i++) {
         for (int j = 0; j < img.cols; j++) {
-            if (img.at<cv::Vec3b>(i,j) != bg) {
+            if (img.at<cv::Vec3b>(i,j) == white) {
                 std::pair<int, int> start = std::make_pair(i,j);
                 cv::Vec3b color = cv::Vec3b(rand() % 255, rand() % 255, rand() % 255);
-             objectList.push_back(indexObject(img, start, bg, color));
+                objectList.push_back(indexObject(img, start, bg, color));
             }
         }
     }
