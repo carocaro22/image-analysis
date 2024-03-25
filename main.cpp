@@ -12,20 +12,13 @@ std::pair<double, double> ethalon(cv::Mat img, std::list<std::vector<std::pair<i
     int size = upper_bound - lower_bound;
 
     for (int i = lower_bound; i < upper_bound; i++) {
-        double f1 = feature1(img, objects.front()); 
-        // std::cout << "result f1 = " << f1 << std::endl;
-        sum_f1 = sum_f1 + f1;
-        
+        sum_f1 = sum_f1 + feature1(img, objects.front()); 
         sum_f2 = sum_f2 + feature2(objects.front());
         objects.pop_front();
     }
 
     double avg_f1 = sum_f1 / size;
     double avg_f2 = sum_f2 / size;
-
-    // std::cout << "avg_f1: " << avg_f1 << std::endl;
-    // std::cout << "avg_f2_min: " << avg_f2_min << std::endl;
-    // std::cout << "avg_f2_max: " << avg_f2_max << std::endl;
 
     std::pair<double, double> features; 
     features.first = avg_f1;
@@ -52,24 +45,46 @@ std::string classify(double f1, double f2, std::list<std::pair<std::string, std:
         std::pair<std::string, std::pair<double, double>> element = e.back();
         double distance = std::sqrt(pow(f1 - element.second.first, 2) + pow(f2 - element.second.second, 2)); 
         distances.push_back(distance); 
-        std::cout << element.first << " f2_min average: " << element.second.first << std::endl;
-        std::cout << element.first << " f1 average: " << element.second.second << std::endl;
+        std::cout << element.first << " f1 average: " << element.second.first << std::endl;
+        std::cout << element.first << " f2 average: " << element.second.second << std::endl;
         e.pop_back();
     }
     double min = std::min(distances[0], std::min(distances[1], distances[2]));
-    
     if (min == distances[0]) {
             return "rectangle";
     }
-    if (min == distances[1]) {
+    else if (min == distances[1]) {
             return "star";
     }
-    if (min == distances[2]) {
+    else if (min == distances[2]) {
             return "square";
+    } else {
+        return "could not identify object";
     }
-    // should never happen
-    return "could not identify object";
 }
+
+cv::Mat plt_ethalons(std::vector<std::pair<cv::Scalar, std::pair<double, double>>> data) {
+    cv::Mat image(300, 300, CV_8UC3);
+    image.setTo(cv::Scalar(255, 255, 255));
+
+    int width = 300;
+    int height = 300;
+    double min_value = 0.0;
+    double max_value = 1.0;
+    double x_scale = static_cast<double>(width) / (max_value - min_value);
+    double y_scale = static_cast<double>(height) / (max_value - min_value);
+
+
+    for (int i = 0; i < data.size(); i++) {
+    int x = x_scale * (data[i].second.first - min_value);
+    int y = height - y_scale * (data[i].second.second - min_value);  // Invert y for bottom-left origin
+
+    cv::circle(image, cv::Point(x, y), 5, data[i].first, -1);
+    }
+
+    return image;
+}
+
 
 int main(int argc, char** argv)
 {
@@ -78,8 +93,29 @@ int main(int argc, char** argv)
     std::list<std::vector<std::pair<int, int>>> objectList = indexAndColor(img, bg);
     
     std::list<std::pair<std::string, std::pair<double, double>>> e = ethalons(img, objectList);
-    std::cout << classify(0.93, 0.77, e) << std::endl;
 
+    double f1;
+    double f2;
+
+    std::cin >> f1;
+    std::cin >> f2; 
+
+    std::cout << classify(f1, f2, e) << std::endl;
+
+    std::vector<std::pair<cv::Scalar, std::pair<double, double>>> data;
+
+    int length = e.size();
+
+    for (int i; i < length; i++) {
+        data.push_back(std::make_pair(cv::Scalar(255, 0, 0),e.back().second));
+        e.pop_back();
+    }
+    
+    data.push_back(std::make_pair(cv::Scalar(0, 255, 0), std::make_pair(f1, f2)));
+
+    cv::Mat plot = plt_ethalons(data);
+
+    cv::imshow("Graph", plot);
     cv::imshow("Index", img);
     cv::waitKey(0);
      

@@ -69,7 +69,9 @@ double feature1(cv::Mat img, std::vector<std::pair<int,int>> obj) {
 double feature2(std::vector<std::pair<int, int>> o) {
     double mu_a = 0.5*(mu(o,2,0) + mu(o,0,2));
     double mu_b = 0.5*(sqrt(4*pow(mu(o,1,1), 2) + pow(mu(o,2,0)-mu(o,0,2), 2)));
-    double result = (mu_a - mu_b) / (mu_a + mu_b); 
+    double a = (mu_a - mu_b);
+    double b = (mu_a + mu_b);
+    double result = a / b; 
     // std::cout << "feature 2: " << result << std::endl;
     return result; 
 }
