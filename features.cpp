@@ -2,26 +2,26 @@
 #include <vector>
 #include <opencv2/opencv.hpp>
 
-float m(std::vector<std::pair<int,int>>obj, float p, float q) {
-    float sum = 0;
+double m(std::vector<std::pair<int,int>>obj, double p, double q) {
+    double sum = 0;
     for (int i = 0; i < obj.size(); i++) {
-        float x = obj.at(i).first; 
-        float y = obj.at(i).second;
-        float x_p = std::pow(x, p);
-        float y_q = std::pow(y, q);
+        double x = obj.at(i).first; 
+        double y = obj.at(i).second;
+        double x_p = std::pow(x, p);
+        double y_q = std::pow(y, q);
         sum = sum + (x_p*y_q);
     }
     return sum;
 }
 
-float area(std::vector<std::pair<int,int>> obj) {
+double area(std::vector<std::pair<int,int>> obj) {
     return m(obj, 0, 0); 
 }
 
-std::pair<float,float> center_of_mass(std::vector<std::pair<int,int>> obj) {
-    float x_t = m(obj, 1, 0) / area(obj);
-    float y_t = m(obj, 0, 1) / area(obj);
-    return std::pair<float,float>(x_t, y_t);
+std::pair<double,double> center_of_mass(std::vector<std::pair<int,int>> obj) {
+    double x_t = m(obj, 1, 0) / area(obj);
+    double y_t = m(obj, 0, 1) / area(obj);
+    return std::pair<double,double>(x_t, y_t);
 }
 
 int circumference(cv::Mat img, std::vector<std::pair<int, int>> obj) {
@@ -43,28 +43,33 @@ int circumference(cv::Mat img, std::vector<std::pair<int, int>> obj) {
     return circumference;
 }
 
-float mu(std::vector<std::pair<int,int>> obj, float p, float q) {
-    float x_t = center_of_mass(obj).first;
-    float y_t = center_of_mass(obj).second;
-    float sum  = 0;
+double mu(std::vector<std::pair<int,int>> obj, double p, double q) {
+    double x_t = center_of_mass(obj).first;
+    double y_t = center_of_mass(obj).second;
+    double sum  = 0;
     for (int i = 0; i < obj.size(); i++) {
         int x = obj.at(i).first;
         int y = obj.at(i).second;
-        float a = pow((x - x_t), p);
-        float b = pow((y - y_t), q);
-        float result = a*b;
+        double a = pow((x - x_t), p);
+        double b = pow((y - y_t), q);
+        double result = a*b;
         sum = sum + result;
     }
     return sum;
 }
 
-float feature1(cv::Mat img, std::vector<std::pair<int,int>> obj) {
-    float result = pow(circumference(img, obj), 2) / (100*area(obj));
+double feature1(cv::Mat img, std::vector<std::pair<int,int>> obj) {
+    double c = circumference(img, obj);
+    double a = area(obj);
+    double result = pow(c, 2) / (100*a);
+    // std::cout << "feature 1: " << result << std::endl;
     return result;
 }
 
-std::pair<float, float> feature2(std::vector<std::pair<int, int>> o) {
-    float mu_a = 0.5*(mu(o,2,0) + mu(o,0,2));
-    float mu_b = 0.5*(sqrt(4*pow(mu(o,1,1), 2) + pow(mu(o,2,0)-mu(o,0,2), 2)));
-    return std::pair<float, float>(mu_a + mu_b, mu_a - mu_b);
+double feature2(std::vector<std::pair<int, int>> o) {
+    double mu_a = 0.5*(mu(o,2,0) + mu(o,0,2));
+    double mu_b = 0.5*(sqrt(4*pow(mu(o,1,1), 2) + pow(mu(o,2,0)-mu(o,0,2), 2)));
+    double result = (mu_a - mu_b) / (mu_a + mu_b); 
+    // std::cout << "feature 2: " << result << std::endl;
+    return result; 
 }
