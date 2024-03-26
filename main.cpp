@@ -74,9 +74,13 @@ std::pair<float, float> feature2(std::vector<std::pair<int, int>> o) {
 int main(int argc, char** argv)
 {
     cv::Mat img = cv::imread("images/train.png", cv::IMREAD_COLOR);
+    cv::Mat test1 = cv::imread("images/test01.png", cv::IMREAD_COLOR);
+    cv::Mat test2 = cv::imread("images/test02.png", cv::IMREAD_COLOR);
     cv::Vec3b bg = cv::Vec3b(0, 0, 0);
 
     std::list<std::vector<std::pair<int, int>>> objectList = indexAndColor(img, bg);
+    std::list<std::vector<std::pair<int, int>>> objectsTest1 = indexAndColor(test1, bg);
+    std::list<std::vector<std::pair<int, int>>> objectsTest2 = indexAndColor(test2, bg);
     int listSize = objectList.size();
     std::cout << listSize << std::endl; 
     
@@ -92,6 +96,8 @@ int main(int argc, char** argv)
     }
 
     cv::imshow("Index", img);
+    cv::imshow("Test 01", test1);
+    cv::imshow("Test 02", test2);
     cv::waitKey(0);
      
     return 0;
